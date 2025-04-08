@@ -1,4 +1,4 @@
-package com.example.provaac1;
+package com.example.controledehabitos;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,20 +8,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-public class BancoHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public BancoHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, "habitos.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE habito (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, descricao TEXT, feito INTEGER)");
+        db.execSQL("CREATE TABLE habitos (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, descricao TEXT, feitoHoje INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS habito");
+        db.execSQL("DROP TABLE IF EXISTS habitos");
         onCreate(db);
     }
 
@@ -30,16 +30,16 @@ public class BancoHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("nome", nome);
         cv.put("descricao", descricao);
-        cv.put("feito", 0);
-        db.insert("habito", null, cv);
+        cv.put("feitoHoje", 0);
+        db.insert("habitos", null, cv);
     }
 
-    public ArrayList<Habito> listar() {
-        ArrayList<Habito> lista = new ArrayList<>();
+    public ArrayList<Habits> listar() {
+        ArrayList<Habits> lista = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM habito", null);
+        Cursor c = db.rawQuery("SELECT * FROM habitos", null);
         while (c.moveToNext()) {
-            lista.add(new Habito(
+            lista.add(new Habits(
                     c.getInt(0),
                     c.getString(1),
                     c.getString(2),
@@ -50,11 +50,11 @@ public class BancoHelper extends SQLiteOpenHelper {
         return lista;
     }
 
-    public Habito buscarPorId(int id) {
+    public Habits buscarPorId(int id) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM habito WHERE id = ?", new String[]{String.valueOf(id)});
+        Cursor c = db.rawQuery("SELECT * FROM habitos WHERE id = ?", new String[]{String.valueOf(id)});
         if (c.moveToFirst()) {
-            Habito h = new Habito(
+            Habits h = new Habits(
                     c.getInt(0),
                     c.getString(1),
                     c.getString(2),
@@ -67,17 +67,17 @@ public class BancoHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public void atualizar(Habito h) {
+    public void atualizar(Habits h) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("nome", h.nome);
-        cv.put("descricao", h.descricao);
-        cv.put("feito", h.feito ? 1 : 0);
-        db.update("habito", cv, "id = ?", new String[]{String.valueOf(h.id)});
+        cv.put("nome", h.getNome());
+        cv.put("descricao", h.getDescricao());
+        cv.put("feitoHoje", h.isFeitoHoje() ? 1 : 0);
+        db.update("habitos", cv, "id = ?", new String[]{String.valueOf(h.getId())});
     }
 
     public void excluir(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete("habito", "id = ?", new String[]{String.valueOf(id)});
+        db.delete("habitos", "id = ?", new String[]{String.valueOf(id)});
     }
 }
