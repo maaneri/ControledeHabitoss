@@ -1,4 +1,4 @@
-package com.example.provaac1;
+package com.example.controledehabitos;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,42 +6,42 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class HabitoActivity extends AppCompatActivity {
+public class HabitsFormActivity extends AppCompatActivity {
 
-    EditText editNome, editDescricao;
-    BancoHelper banco;
-    int habitoId = -1;
+    EditText nomeInput, descricaoInput;
+    DatabaseHelper dbHelper;
+    int habitId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.habito_activity);
+        setContentView(R.layout.activity_habit_form);
 
-        banco = new BancoHelper(this);
-        editNome = findViewById(R.id.editNome);
-        editDescricao = findViewById(R.id.editDescricao);
-        Button btnSalvar = findViewById(R.id.btnSalvar);
+        dbHelper = new DatabaseHelper(this);
+        nomeInput = findViewById(R.id.nomeInput);
+        descricaoInput = findViewById(R.id.descricaoInput);
+        Button salvarButton = findViewById(R.id.salvarButton);
 
-        if (getIntent().hasExtra("id")) {
-            habitoId = getIntent().getIntExtra("id", -1);
-            Habito h = banco.buscarPorId(habitoId);
+        if (getIntent().hasExtra("habitId")) {
+            habitId = getIntent().getIntExtra("habitId", -1);
+            Habits h = dbHelper.getHabitById(habitId);
             if (h != null) {
-                editNome.setText(h.nome);
-                editDescricao.setText(h.descricao);
+                nomeInput.setText(h.nome);
+                descricaoInput.setText(h.descricao);
             }
         }
 
-        btnSalvar.setOnClickListener(v -> {
-            String nome = editNome.getText().toString();
-            String desc = editDescricao.getText().toString();
+        salvarButton.setOnClickListener(v -> {
+            String nome = nomeInput.getText().toString();
+            String desc = descricaoInput.getText().toString();
 
-            if (habitoId == -1) {
-                banco.inserir(nome, desc);
+            if (habitId == -1) {
+                dbHelper.insertHabit(new Habits(nome, desc, false));
             } else {
-                Habito h = banco.buscarPorId(habitoId);
+                Habits h = dbHelper.getHabitById(habitId);
                 h.nome = nome;
                 h.descricao = desc;
-                banco.atualizar(h);
+                dbHelper.updateHabit(h);
             }
 
             finish();
