@@ -1,15 +1,15 @@
-package com.example.provaac1;
+package com.example.controledehabitos;
 
-public class Habito {
+public class Habits {
     public int id;
     public String nome;
     public String descricao;
-    public boolean feito;
+    public boolean feitoHoje;
 
-    public Habito(int id, String nome, String descricao, boolean feito) {
+    public Habits(int id, String nome, String descricao, boolean feitoHoje) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
-        this.feito = feito;
+        this.feitoHoje = feitoHoje;
     }
 }
