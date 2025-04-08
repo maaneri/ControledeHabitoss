@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Habits</string>
+    <string name="add_habit">Add Habits</string>
+    <string name="habit_name">Habit Name</string>
+    <string name="habit_description">Description</string>
+    <string name="save">Save</string>
+</resources>
